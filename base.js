@@ -29,15 +29,15 @@ const costs = [
 
 const arr = []
 
-integrations.map((integration, i) => {
-  costs.map(cost => {
+integrations.map(integration => {
+  
     options.map(option => {
-      months.map(month => {
+      months.map((month, i) => {
         users.map(user => {
-          arr.push(`${integration === 'void' ? 'Base + ' + user + ' + ' + cost[month] : 'Base + ' + integration + ' + ' + user + ' + ' + cost[month] + ' + ' + option}`)
+          arr.push(integration === 'void' ? 'Base + ' + user + ' + ' + costs[i][month] : 'Base + ' + integration + ' + ' + user + ' + ' + costs[i][month] + ' + ' + option)
         })
       })
     })
-  })
+  
   fs.writeFileSync(out, arr.join('\n'))
 })
