@@ -3,7 +3,11 @@ const out = 'out.txt'
 
 const allPlans = ["Base", "Customer service", "Documentation", "Management", "VoIP INTEGRATION", "QUICKBOOKS INTEGRATION"]
 
-const options = ["Customer service", "Documentation", "Management", "Customer service and Documentation", "Customer service and Management", "Documentation and Management", "Customer service / Documentation / Management"]
+const options = [
+  "Base", 
+  "Base and Customer service", "Base and Documentation", "Base and Management",
+  "Base and Customer service and Documentation", "Base and Customer service and Management",
+  "Base and Documentation and Management", "Base and Customer service and Documentation and Management"]
 
 const months = [1, 3, 6, 12]
 
@@ -14,7 +18,7 @@ const integrations = [
   "VoIP INTEGRATION + QUICKBOOKS INTEGRATION"
 ]
 
-const users = [0, 150, 300, 399]
+const users = [10, 20, 30, "unlimited"]
 
 const costs = [
   // BASE
@@ -29,15 +33,15 @@ const costs = [
 
 const arr = []
 
-integrations.map(integration => {
-  
+  integrations.map(integration => {
     options.map(option => {
       months.map((month, i) => {
         users.map(user => {
-          arr.push(integration === 'void' ? 'Base + ' + user + ' + ' + costs[i][month] : 'Base + ' + integration + ' + ' + user + ' + ' + costs[i][month] + ' + ' + option)
+          arr.push(option + ' + ' + user + ' users' + ' + ' + month + ' mo' + ` ${integration === 'void' ? '' : integration}`)
         })
       })
     })
+    fs.writeFileSync(out, arr.join('\n'))
+  })
   
-  fs.writeFileSync(out, arr.join('\n'))
-})
+
