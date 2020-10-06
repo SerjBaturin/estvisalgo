@@ -5,17 +5,17 @@ const allPlans = ["Base", "Customer service", "Documentation", "Management", "Vo
 
 const options = [
   "Base", 
-  "Base and Customer service", "Base and Documentation", "Base and Management",
-  "Base and Customer service and Documentation", "Base and Customer service and Management",
-  "Base and Documentation and Management", "Base and Customer service and Documentation and Management"]
+  "Base + Customer service", "Base + Documentation", "Base + Management",
+  "Base + Customer service + Documentation", "Base + Customer service + Management",
+  "Base + Documentation + Management", "Base + Customer service + Documentation + Management"]
 
 const months = [1, 3, 6, 12]
 
 const integrations = [
   "void",
-  "VoIP INTEGRATION",
-  "QUICKBOOKS INTEGRATION",
-  "VoIP INTEGRATION + QUICKBOOKS INTEGRATION"
+  "VoIP integration",
+  "QuickBooks integration",
+  "VoIP + QuickBooks integration"
 ]
 
 const users = [10, 20, 30, "unlimited"]
@@ -37,11 +37,9 @@ const arr = []
     options.map(option => {
       months.map((month, i) => {
         users.map(user => {
-          arr.push(option + ' + ' + user + ' users' + ' + ' + month + ' mo' + ` ${integration === 'void' ? '' : integration}`)
+          arr.push(option + `${integration === 'void' ? '' : ' + ' + integration}` + ' (' + user + ' users' + ', ' + month + ' mo)')
         })
       })
     })
     fs.writeFileSync(out, arr.join('\n'))
   })
-  
-
