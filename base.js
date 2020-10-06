@@ -1,8 +1,6 @@
 const fs = require('fs')
 const out = 'out.txt'
 
-const allPlans = ["Base", "Customer service", "Documentation", "Management", "VoIP INTEGRATION", "QUICKBOOKS INTEGRATION"]
-
 const options = [
   "Base", 
   "Base + Customer service", "Base + Documentation", "Base + Management",
@@ -32,14 +30,32 @@ const costs = [
 ];
 
 const arr = []
+const outPlans = []
 
-  integrations.map(integration => {
-    options.map(option => {
-      months.map((month, i) => {
-        users.map(user => {
-          arr.push(option + `${integration === 'void' ? '' : ' + ' + integration}` + ' (' + user + ' users' + ', ' + month + ' mo)')
-        })
+integrations.map(integration => {
+  options.map(option => {
+    months.map((month, i) => {
+      users.map(user => {
+        arr.push(
+          
+          { 
+            plan_name: option + `${integration === 'void' ? '' : ' + ' + integration}` + ' (' + user + ' users' + ', ' + month + ' mo)',
+            plan_trial_days: 0,
+            plan_length: month,
+            plan_type: month,
+            main_currency_code: 'USD',
+            initial_price_usd: costs[i][month],
+            recurring_price_usd: costs[i][month], 
+          }
+
+        )
       })
     })
-    fs.writeFileSync(out, arr.join('\n'))
   })
+})
+
+arr.map(item => {
+  outPlans.push(item.plan_name)
+})
+
+fs.writeFileSync(out, outPlans.join('\n'))
