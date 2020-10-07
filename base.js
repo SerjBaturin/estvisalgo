@@ -26,7 +26,7 @@ const costs = [
   // BASE + 2
   {1: 597, 3: 1647, 6: 2997, 12: 5397,},
   // BASE + 3
-  {1: 796, 3: 2196, 6: 3996, 12: 7196,},
+  {1: 796, 3: 2196, 6: 3996, 12: 7196,}
 ];
 
 const getOneYear = (x) => {
@@ -83,7 +83,7 @@ const getUserCost = (x) => {
   }
 }
 
-const price = (x, y, z, i, month) => x[i][month] + getIntegrationCost(y) + getUserCost(z)
+const price = (costs, y, z, i, month) => costs[i][month] + getIntegrationCost(y) + getUserCost(z)
 
 const arr = []
 const outPlans = []
