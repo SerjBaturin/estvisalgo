@@ -29,6 +29,62 @@ const costs = [
   {1: 796, 3: 2196, 6: 3996, 12: 7196,},
 ];
 
+const getOneYear = (x) => {
+  switch (x) {
+    case 1:
+      return `${x} month`
+      break;
+    case 3:
+      return `${x} months`
+      break;
+    case 6:
+      return `${x} months`
+      break;
+    case 12:
+      return '1 year'
+      break;
+    default:
+      break;
+  }
+}
+
+const getIntegrationCost = (x) => {
+  switch (x) {
+    case "void":
+      return 0
+      break;
+    case "VoIP integration" || "QuickBooks integration":
+      return 29
+      break;
+    case "VoIP + QuickBooks integration":
+      return 58
+      break;
+    default:
+      return 0
+  }
+}
+
+const getUserCost = (x) => {
+  switch (x) {
+    case 10:
+      return 0
+      break;
+    case 20:
+      return 150
+      break;
+    case 30:
+      return 300
+      break;
+    case "unlimited":
+      return 399
+      break;
+    default:
+      return 0
+  }
+}
+
+const price = (x, y, z, i, month) => x[i][month] + getIntegrationCost(y) + getUserCost(z)
+
 const arr = []
 const outPlans = []
 
@@ -39,13 +95,13 @@ integrations.map(integration => {
         arr.push(
           
           { 
-            plan_name: option + `${integration === 'void' ? '' : ' + ' + integration}` + ' (' + user + ' users' + ', ' + month + ' mo)',
+            plan_name: option + `${integration === 'void' ? '' : ' + ' + integration}` + ' (' + user + ' users' + ', ' + getOneYear(month) + ')',
             plan_trial_days: 0,
             plan_length: month,
-            plan_type: month,
+            plan_type: 'month',
             main_currency_code: 'USD',
-            initial_price_usd: costs[i][month],
-            recurring_price_usd: costs[i][month], 
+            initial_price_usd: '0.00',
+            recurring_price_usd: price(costs, integration, user, i, month), 
           }
 
         )
@@ -55,7 +111,8 @@ integrations.map(integration => {
 })
 
 arr.map(item => {
-  outPlans.push(item.plan_name)
+  outPlans.push(item.plan_name + " --- " + item.recurring_price_usd)
 })
 
 fs.writeFileSync(out, outPlans.join('\n'))
+
