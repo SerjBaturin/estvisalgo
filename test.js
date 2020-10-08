@@ -1,9 +1,8 @@
-const fs = require('fs')
-const out = 'out.txt'
+const qs = require("querystring");
+const http = require("https");
 
 const options = [
-  "Base", 
-  "Base + Customer service", "Base + Documentation", "Base + Management",
+  "Base", "Base + Customer service", "Base + Documentation", "Base + Management",
   "Base + Customer service + Documentation", "Base + Customer service + Management",
   "Base + Documentation + Management", "Base + Customer service + Documentation + Management"]
 
@@ -17,17 +16,6 @@ const integrations = [
 ]
 
 const users = [10, 20, 30, "unlimited"]
-
-const costs = [
-  // BASE
-  {1: 199, 3: 549, 6: 999, 12: 1799,},
-  // BASE + 1
-  {1: 398, 3: 1098, 6: 1998, 12: 3598,},
-  // BASE + 2
-  {1: 597, 3: 1647, 6: 2997, 12: 5397,},
-  // BASE + 3
-  {1: 796, 3: 2196, 6: 3996, 12: 7196,}
-];
 
 const getOptionCost = (option, month) => {
   switch (option) {
@@ -145,8 +133,49 @@ options.map(option => {
 })
 
 arr.map(item => {
-  outPlans.push(item.plan_name + " --- " + item.recurring_price_usd)
+  outPlans.push({name: item.plan_name, month: item.plan_length, price: item.recurring_price_usd})
 })
 
-fs.writeFileSync(out, outPlans.join('\n'))
+const send = (obj) => {
+  const options = {
+    "method": "POST",
+    "hostname": "vendors.paddle.com",
+    "port": null,
+    "path": "/api/2.0/subscription/plans_create",
+    "headers": {
+      "content-type": "application/x-www-form-urlencoded"
+    }
+  };
+  
+  const req = http.request(options, function (res) {
+    const chunks = [];
+  
+    res.on("data", function (chunk) {
+      chunks.push(chunk);
+    });
+  
+    res.on("end", function () {
+      const body = Buffer.concat(chunks);
+      console.log(body.toString());
+    });
+  });
+  
+    req.write(qs.stringify({
+      vendor_id: 39193,
+      vendor_auth_code: '938dbfaecc1b9a4bf670aaf4e640ac6c2efe06168c5a51c3a7',
+      plan_name: obj.name,
+      plan_trial_days: 0,
+      plan_length: obj.month,
+      plan_type: 'month',
+      main_currency_code: 'USD',
+      initial_price_usd: '0.00',
+      recurring_price_usd: obj.price, 
+    }));
+    req.end();
+}
 
+outPlans.map((obj, i) => {
+  setTimeout(() => {
+    send(obj)
+  }, 1000 * i)
+})
