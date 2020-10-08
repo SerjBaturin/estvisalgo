@@ -24,7 +24,7 @@ var req = http.request(options, function (res) {
   res.on("end", function () {
     var body = Buffer.concat(chunks);
     arr.push(body.toString());
-    fs.writeFileSync("outPlans.js", arr.join('\n'))
+    fs.writeFileSync("outPlans.js", arr)
   });
 });
 
