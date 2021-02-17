@@ -162,7 +162,7 @@ const send = (obj) => {
   
     req.write(qs.stringify({
       vendor_id: 39193,
-      vendor_auth_code: '938dbfaecc1b9a4bf670aaf4e640ac6c2efe06168c5a51c3a7',
+      vendor_auth_code: '',
       plan_name: obj.name,
       plan_trial_days: 0,
       plan_length: obj.month,
